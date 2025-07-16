@@ -1,50 +1,44 @@
-// src/components/UserCard.jsx
+import axios from "axios";
 import React from "react";
+import { BASE_URL } from "../utils/constants";
+import { useDispatch } from "react-redux";
+import { removeUserFromFeed } from "../utils/feedSlice";
 
 const UserCard = ({ user }) => {
-  if (!user) return null;
+  const { _id, firstName, lastName, photoUrl, age, gender, about } = user;
+  const dispatch = useDispatch();
 
-  const {
-    firstName = "Unknown",
-    lastName = "",
-    photoUrl,
-    age,
-    gender,
-    about = "No bio provided by this user.",
-  } = user;
+  const handleSendRequest = async (status, userId) => {
+    try {
+      const res = await axios.post(
+        BASE_URL + "/request/send/" + status + "/" + userId,
+        {},
+        { withCredentials: true }
+      );
+      dispatch(removeUserFromFeed(userId));
+    } catch (err) {}
+  };
 
   return (
-    <div className="card w-full max-w-sm bg-white dark:bg-neutral-900 shadow-xl border border-neutral-200 dark:border-neutral-800 transition-all duration-300 hover:shadow-2xl hover:scale-[1.02]">
-      <figure className="p-4">
-        <img
-          src={photoUrl || "https://placehold.co/400x400?text=No+Image"}
-          alt={`${firstName} ${lastName}`}
-          className="rounded-xl h-64 w-full object-cover bg-gray-100 dark:bg-gray-800"
-        />
+    <div className="card bg-base-300 w-96 shadow-xl">
+      <figure>
+        <img src={user.photoUrl} alt="photo" />
       </figure>
-
-      <div className="card-body items-center text-center px-5 py-4">
-        <h2 className="card-title text-lg md:text-xl font-semibold text-neutral-800 dark:text-white">
-          {firstName.toUpperCase()} {lastName.toUpperCase()}
-        </h2>
-
-        {(age || gender) && (
-          <p className="text-sm text-gray-600 dark:text-gray-300 mt-1">
-            {age && <span>{age} yrs</span>}
-            {age && gender && <span> &bull; </span>}
-            {gender && <span className="capitalize">{gender}</span>}
-          </p>
-        )}
-
-        <p className="text-sm text-gray-500 dark:text-gray-400 mt-2 italic">
-          {about}
-        </p>
-
-        <div className="card-actions justify-center mt-5 gap-4">
-          <button className="btn btn-outline border-red-500 text-red-600 hover:bg-red-100 dark:hover:bg-red-900 transition font-medium">
+      <div className="card-body">
+        <h2 className="card-title">{firstName + " " + lastName}</h2>
+        {age && gender && <p>{age + ", " + gender}</p>}
+        <p>{about}</p>
+        <div className="card-actions justify-center my-4">
+          <button
+            className="btn btn-primary"
+            onClick={() => handleSendRequest("ignored", _id)}
+          >
             Ignore
           </button>
-          <button className="btn bg-indigo-600 text-white hover:bg-indigo-700 transition font-medium shadow-md">
+          <button
+            className="btn btn-secondary"
+            onClick={() => handleSendRequest("interested", _id)}
+          >
             Interested
           </button>
         </div>
@@ -52,5 +46,4 @@ const UserCard = ({ user }) => {
     </div>
   );
 };
-
 export default UserCard;

@@ -1,61 +1,42 @@
-// src/components/Feed.jsx
-import React, { useEffect } from "react";
+
+import React from "react";
 import axios from "axios";
-import { useDispatch, useSelector } from "react-redux";
 import { BASE_URL } from "../utils/constants";
+import { useDispatch, useSelector } from "react-redux";
 import { addFeed } from "../utils/feedSlice";
+import { useEffect } from "react";
 import UserCard from "./UserCard";
 
 const Feed = () => {
+  const feed = useSelector((store) => store.feed);
   const dispatch = useDispatch();
-  const feed = useSelector((store) => store.feed || []);
 
   const getFeed = async () => {
+    if (feed) return;
     try {
       const res = await axios.get(BASE_URL + "/feed", {
         withCredentials: true,
       });
-
-      const usersArray = res.data.data; // ✅ extract the array
-
-      if (Array.isArray(usersArray)) {
-        dispatch(addFeed(usersArray));
-      } else {
-        console.warn("API /feed did not return a valid array:", res.data);
-        dispatch(addFeed([]));
-      }
+      dispatch(addFeed(res?.data?.data));
     } catch (err) {
-      console.error("Error fetching feed:", err);
+      //TODO: handle error
     }
   };
 
   useEffect(() => {
     getFeed();
-  }, [dispatch]);
+  }, []);
+  if (!feed) return;
 
-  if (!Array.isArray(feed)) {
-    return (
-      <div className="text-center text-red-500 mt-10">
-        ❌ Invalid feed data. Please try again later.
-      </div>
-    );
-  }
-
-  if (feed.length === 0) {
-    return (
-      <div className="text-center text-gray-500 mt-10">
-        No users found in the feed.
-      </div>
-    );
-  }
+  if (feed.length <= 0)
+    return <h1 className="flex justify-center my-10">No new users founds!</h1>;
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 p-6">
-      {feed.map((user) => (
-        <UserCard key={user._id} user={user} />
-      ))}
-    </div>
+    feed && (
+      <div className="flex justify-center my-10">
+        <UserCard user={feed[0]} />
+      </div>
+    )
   );
 };
-
 export default Feed;
