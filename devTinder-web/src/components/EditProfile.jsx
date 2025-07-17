@@ -1,11 +1,9 @@
-// src/components/EditProfile.jsx
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import UserCard from "./UserCard";
 import axios from "axios";
 import { BASE_URL } from "../utils/constants";
 import { addUser } from "../utils/userSlice";
-
 
 const EditProfile = () => {
   const user = useSelector((store) => store.user);
@@ -39,12 +37,10 @@ const EditProfile = () => {
         { firstName, lastName, photoUrl, age, gender, about },
         { withCredentials: true }
       );
-
       dispatch(addUser(res?.data?.data));
       setShowToast(true);
       setTimeout(() => setShowToast(false), 3000);
     } catch (err) {
-        
       setError(err.response?.data || "Something went wrong");
     }
   };
@@ -55,34 +51,57 @@ const EditProfile = () => {
 
   return (
     <>
-      <div className="flex flex-col lg:flex-row items-center justify-center my-10 gap-8 px-4">
-        <div className="card bg-base-300 w-full max-w-md shadow-lg border border-neutral/20">
-          <div className="card-body">
-            <h2 className="card-title justify-center text-xl font-semibold">Edit Profile</h2>
+      <div className="flex flex-col lg:flex-row justify-between items-start gap-10 px-4 py-10 max-w-6xl mx-auto">
+        {/* Left: Form */}
+        <div className="w-full lg:w-1/2 bg-base-300 rounded-2xl shadow-md p-6 border border-neutral/30">
+          <h2 className="text-2xl font-bold mb-4 text-center">Edit Profile</h2>
 
-            <label className="form-control w-full my-2">
-              <span className="label-text">First Name:</span>
-              <input type="text" className="input input-bordered" value={firstName} onChange={(e) => setFirstName(e.target.value)} />
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <label className="form-control">
+              <span className="label-text">First Name</span>
+              <input
+                className="input input-bordered"
+                value={firstName}
+                onChange={(e) => setFirstName(e.target.value)}
+              />
             </label>
 
-            <label className="form-control w-full my-2">
-              <span className="label-text">Last Name:</span>
-              <input type="text" className="input input-bordered" value={lastName} onChange={(e) => setLastName(e.target.value)} />
+            <label className="form-control">
+              <span className="label-text">Last Name</span>
+              <input
+                className="input input-bordered"
+                value={lastName}
+                onChange={(e) => setLastName(e.target.value)}
+              />
             </label>
 
-            <label className="form-control w-full my-2">
-              <span className="label-text">Photo URL:</span>
-              <input type="text" className="input input-bordered" value={photoUrl} onChange={(e) => setPhotoUrl(e.target.value)} />
+            <label className="form-control col-span-full">
+              <span className="label-text">Photo URL</span>
+              <input
+                className="input input-bordered"
+                value={photoUrl}
+                onChange={(e) => setPhotoUrl(e.target.value)}
+              />
             </label>
 
-            <label className="form-control w-full my-2">
-              <span className="label-text">Age:</span>
-              <input type="number" className="input input-bordered" value={age} onChange={(e) => setAge(e.target.value)} min="0" />
+            <label className="form-control">
+              <span className="label-text">Age</span>
+              <input
+                type="number"
+                min="0"
+                className="input input-bordered"
+                value={age}
+                onChange={(e) => setAge(e.target.value)}
+              />
             </label>
 
-            <label className="form-control w-full my-2">
-              <span className="label-text">Gender:</span>
-              <select className="select select-bordered" value={gender} onChange={(e) => setGender(e.target.value)}>
+            <label className="form-control">
+              <span className="label-text">Gender</span>
+              <select
+                className="select select-bordered"
+                value={gender}
+                onChange={(e) => setGender(e.target.value)}
+              >
                 <option value="">Select Gender</option>
                 <option value="male">Male</option>
                 <option value="female">Female</option>
@@ -90,27 +109,35 @@ const EditProfile = () => {
               </select>
             </label>
 
-            <label className="form-control w-full my-2">
-              <span className="label-text">About:</span>
-              <textarea className="textarea textarea-bordered" value={about} onChange={(e) => setAbout(e.target.value)} maxLength={200} />
-              <span className="text-xs text-gray-500">{about.length}/200</span>
+            <label className="form-control col-span-full">
+              <span className="label-text">About</span>
+              <textarea
+                className="textarea textarea-bordered"
+                maxLength={200}
+                value={about}
+                onChange={(e) => setAbout(e.target.value)}
+              />
+              <span className="text-xs text-gray-400">{about.length}/200</span>
             </label>
-
-            {error && <p className="text-sm text-red-500 mt-2">{error}</p>}
-
-            <div className="card-actions justify-center mt-4">
-              <button className="btn btn-primary w-full" onClick={saveProfile}>
-                Save Profile
-              </button>
-            </div>
           </div>
+
+          {error && <p className="text-sm text-red-500 mt-2">{error}</p>}
+
+          <button className="btn btn-primary w-full mt-6" onClick={saveProfile}>
+            Save Profile
+          </button>
         </div>
 
-        <UserCard user={{ firstName, lastName, photoUrl, age, gender, about }} />
+        {/* Right: Preview */}
+        <div className="w-full lg:w-1/2">
+          <UserCard
+            user={{ firstName, lastName, photoUrl, age, gender, about }}
+          />
+        </div>
       </div>
 
       {showToast && (
-        <div className="toast toast-top toast-center">
+        <div className="toast toast-top toast-center z-50">
           <div className="alert alert-success">
             <span>Profile saved successfully.</span>
           </div>

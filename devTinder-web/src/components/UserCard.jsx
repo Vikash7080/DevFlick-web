@@ -10,7 +10,7 @@ const UserCard = ({ user }) => {
 
   const handleSendRequest = async (status, userId) => {
     try {
-      const res = await axios.post(
+      await axios.post(
         BASE_URL + "/request/send/" + status + "/" + userId,
         {},
         { withCredentials: true }
@@ -20,30 +20,36 @@ const UserCard = ({ user }) => {
   };
 
   return (
-    <div className="card bg-base-300 w-96 shadow-xl">
-      <figure>
-        <img src={user.photoUrl} alt="photo" />
-      </figure>
-      <div className="card-body">
-        <h2 className="card-title">{firstName + " " + lastName}</h2>
-        {age && gender && <p>{age + ", " + gender}</p>}
-        <p>{about}</p>
-        <div className="card-actions justify-center my-4">
+    <div className="w-full bg-base-300 rounded-2xl shadow-xl p-6 border border-neutral/20 flex flex-col items-center">
+      <img
+        src={photoUrl || "https://placehold.co/100x100?text=User"}
+        alt="User"
+        className="w-28 h-28 rounded-full object-cover border-4 border-primary shadow-md mb-4"
+      />
+      <h2 className="text-xl font-semibold">{firstName} {lastName}</h2>
+      {age && gender && (
+        <p className="text-sm text-gray-500">{age}, {gender}</p>
+      )}
+      {about && <p className="text-center mt-2">{about}</p>}
+
+      {_id && (
+        <div className="flex gap-4 mt-6">
           <button
-            className="btn btn-primary"
+            className="btn btn-sm btn-error"
             onClick={() => handleSendRequest("ignored", _id)}
           >
             Ignore
           </button>
           <button
-            className="btn btn-secondary"
+            className="btn btn-sm btn-success"
             onClick={() => handleSendRequest("interested", _id)}
           >
             Interested
           </button>
         </div>
-      </div>
+      )}
     </div>
   );
 };
+
 export default UserCard;

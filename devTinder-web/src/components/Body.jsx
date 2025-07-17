@@ -34,14 +34,17 @@ const Body = () => {
   }, []);
 
   if (loading) {
-    return <h1 className="text-center mt-10">Loading...</h1>;
+    return (
+      <div className="flex justify-center items-center h-screen bg-[#0f0f10]">
+        <div className="w-16 h-16 border-4 border-blue-500 border-dashed rounded-full animate-spin"></div>
+      </div>
+    );
   }
 
   return (
     <>
       <NavBar />
 
-      {/* ✅ Show user details here */}
       {userData && (
         <div className="bg-base-200 p-6 m-4 rounded-lg text-center shadow">
           <img
