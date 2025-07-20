@@ -71,58 +71,57 @@ const LoginSignup = () => {
   return (
     <div className="min-h-screen flex flex-col md:flex-row bg-black text-white">
       <ToastContainer />
-{/* Left Side Image Section */}
-<div
-  key={fadeKey}
-  className="md:w-1/2 relative hidden md:block transition-opacity duration-700 ease-in-out opacity-100 animate-fade-in"
->
-  <img
-    src="https://t4.ftcdn.net/jpg/02/67/52/49/360_F_267524919_wXbVQHR189pLVU06eQ85GGLnJMq2eJFR.jpg"
-    alt="background"
-    className="w-full h-full object-cover brightness-[.6]"
-  />
-  <div className="absolute inset-0 bg-black/50" />
 
-  <div className="absolute z-10 px-8 md:px-16 top-1/4 transform -translate-y-1/4">
-    <BlurText
-      text="👋 Welcome to DevFlick"
-      animateBy="words"
-      className="text-white text-4xl md:text-5xl font-bold mb-4"
-      delay={100}
-    />
-    <BlurText
-      text="Connect with developers. Share code. Build products. Empower innovation."
-      animateBy="words"
-      className="text-gray-300 text-lg md:text-xl mb-4"
-      delay={80}
-    />
-    <BlurText
-      text="Let’s craft your destiny with logic, passion, and precision."
-      animateBy="words"
-      className="text-gray-400 text-base md:text-lg"
-      delay={80}
-    />
-  </div>
-</div>
+      {/* Left Image + Text */}
+      <div
+        key={fadeKey}
+        className="md:w-1/2 relative hidden md:flex flex-col justify-center transition-opacity duration-700 ease-in-out"
+      >
+        <img
+          src="https://t4.ftcdn.net/jpg/02/67/52/49/360_F_267524919_wXbVQHR189pLVU06eQ85GGLnJMq2eJFR.jpg"
+          alt="background"
+          className="w-full h-full object-cover brightness-[.6]"
+        />
+        <div className="absolute inset-0 bg-black/50" />
+        <div className="absolute z-10 px-6 lg:px-16 top-1/4 transform -translate-y-1/4">
+          <BlurText
+            text="👋 Welcome to DevFlick"
+            animateBy="words"
+            className="text-white text-3xl lg:text-5xl font-bold mb-4"
+            delay={100}
+          />
+          <BlurText
+            text="Connect with developers. Share code. Build products. Empower innovation."
+            animateBy="words"
+            className="text-gray-300 text-md lg:text-xl mb-4"
+            delay={80}
+          />
+          <BlurText
+            text="Let’s craft your destiny with logic, passion, and precision."
+            animateBy="words"
+            className="text-gray-400 text-base lg:text-lg"
+            delay={80}
+          />
+        </div>
+      </div>
 
-
-      {/* Right Side Form Section */}
+      {/* Right Form */}
       <div
         key={fadeKey + 1000}
-        className="md:w-1/2 w-full flex items-center justify-center p-6 sm:p-10 relative z-10 bg-[#0f0f10] transition-all duration-700 ease-in-out animate-fade-in"
+        className="md:w-1/2 w-full flex items-center justify-center p-4 sm:p-6 lg:p-10 bg-[#0f0f10] z-10"
       >
-        <div className="w-full max-w-md bg-[#1a1c23] p-8 sm:p-10 rounded-xl shadow-xl border border-gray-700">
+        <div className="w-full max-w-md bg-[#1a1c23] p-6 sm:p-10 rounded-xl shadow-xl border border-gray-700">
           <div className="flex flex-col items-center mb-6">
-            <div className="text-5xl mb-2 text-red-500 animate-pulse">
-              <span role="img" aria-label="fire">🔥</span>
-            </div>
+            <div className="text-5xl mb-2 text-red-500 animate-pulse">🔥</div>
             <h1 className="text-2xl font-bold">👨‍💻 DevFlick</h1>
             <p className="text-gray-400 mt-1 text-center">Swipe. Match. Code.</p>
           </div>
 
+          {/* Toggle Buttons */}
           <div className="flex justify-around mb-6 border-b border-gray-600">
             <button
-              className={`py-2 px-4 font-semibold transition ${
+              type="button"
+              className={`cursor-pointer py-2 px-4 font-semibold transition ${
                 isLogin
                   ? "text-blue-400 border-b-2 border-blue-400"
                   : "text-gray-400 hover:text-blue-300"
@@ -132,7 +131,8 @@ const LoginSignup = () => {
               Login
             </button>
             <button
-              className={`py-2 px-4 font-semibold transition ${
+              type="button"
+              className={`cursor-pointer py-2 px-4 font-semibold transition ${
                 !isLogin
                   ? "text-blue-400 border-b-2 border-blue-400"
                   : "text-gray-400 hover:text-blue-300"
@@ -143,6 +143,7 @@ const LoginSignup = () => {
             </button>
           </div>
 
+          {/* Form */}
           <form
             onSubmit={(e) => {
               e.preventDefault();
@@ -219,14 +220,16 @@ const LoginSignup = () => {
             </button>
           </form>
 
+          {/* Bottom Link */}
           <p className="text-sm text-center mt-4 text-gray-400">
             {isLogin ? "New to DevFlick?" : "Already have an account?"}{" "}
-            <span
-              className="text-blue-400 cursor-pointer hover:underline"
+            <button
+              type="button"
+              className="inline-block cursor-pointer text-blue-400 hover:underline focus:outline-none"
               onClick={() => handleSwitchMode(!isLogin)}
             >
               {isLogin ? "Create an account" : "Login here"}
-            </span>
+            </button>
           </p>
         </div>
       </div>

@@ -15,7 +15,7 @@ function App() {
     <Provider store={appStore}>
       <BrowserRouter>
         <Routes>
-          {/* 🟢 Protected Routes Layout */}
+          {/* 🟢Protected Routes Layout */}
           <Route path="/" element={<Body />}>
             <Route path="feed" element={<Feed />} />
             <Route path="profile" element={<Profile />} />

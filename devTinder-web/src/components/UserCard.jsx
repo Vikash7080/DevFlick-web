@@ -11,29 +11,43 @@ const UserCard = ({ user }) => {
   const handleSendRequest = async (status, userId) => {
     try {
       await axios.post(
-        BASE_URL + "/request/send/" + status + "/" + userId,
+        `${BASE_URL}/request/send/${status}/${userId}`,
         {},
         { withCredentials: true }
       );
       dispatch(removeUserFromFeed(userId));
-    } catch (err) {}
+    } catch (err) {
+      console.error("Request error:", err);
+    }
   };
 
   return (
-    <div className="w-full bg-base-300 rounded-2xl shadow-xl p-6 border border-neutral/20 flex flex-col items-center">
-      <img
-        src={photoUrl || "https://placehold.co/100x100?text=User"}
-        alt="User"
-        className="w-28 h-28 rounded-full object-cover border-4 border-primary shadow-md mb-4"
-      />
-      <h2 className="text-xl font-semibold">{firstName} {lastName}</h2>
-      {age && gender && (
-        <p className="text-sm text-gray-500">{age}, {gender}</p>
-      )}
-      {about && <p className="text-center mt-2">{about}</p>}
+    <div className="w-full bg-base-300 rounded-xl shadow-md p-6 border border-neutral/20 flex flex-col sm:flex-row items-center sm:items-start justify-between gap-4">
+      {/* Left: Avatar and User Info */}
+      <div className="flex items-center gap-4 w-full sm:w-auto">
+        <img
+          src={photoUrl || "https://placehold.co/100x100?text=User"}
+          alt="User"
+          className="w-20 h-20 rounded-full object-cover border-4 border-primary shadow-md"
+        />
+        <div>
+          <h2 className="text-lg font-semibold">
+            {firstName} {lastName}
+          </h2>
+          {age && gender && (
+            <p className="text-sm text-gray-500">
+              {age}, {gender}
+            </p>
+          )}
+          {about && (
+            <p className="text-sm text-gray-400 mt-1">{about}</p>
+          )}
+        </div>
+      </div>
 
+      {/* Right: Buttons */}
       {_id && (
-        <div className="flex gap-4 mt-6">
+        <div className="flex gap-3 sm:gap-4 mt-4 sm:mt-0 sm:self-center">
           <button
             className="btn btn-sm btn-error"
             onClick={() => handleSendRequest("ignored", _id)}
