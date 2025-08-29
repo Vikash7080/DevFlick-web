@@ -3,73 +3,90 @@ import { FaTwitter, FaFacebookF, FaGithub, FaYoutube } from "react-icons/fa";
 
 const Footer = () => {
   return (
-    <footer className="bg-zinc-950 text-gray-400 px-6 md:px-10 py-12 border-t border-neutral-800">
-      <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-10">
+    <footer className="bg-zinc-950 text-gray-400 px-4 md:px-8 py-8 md:py-10">
+      <div className="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
         {/* Branding */}
         <div>
-          <h2 className="text-2xl font-bold text-white">DevFlick 🚀</h2>
-          <p className="text-sm mt-4 leading-relaxed">
-            Build, connect, and grow your developer network. DevFlick helps you
-            find like-minded coders & collaborate globally.
+          <h2 className="text-xl font-bold text-white">DevFlick 🚀</h2>
+          <p className="text-xs mt-2 leading-snug">
+            Connect, collaborate & grow your developer network globally.
           </p>
         </div>
 
         {/* Product Links */}
         <div>
-          <h3 className="text-sm font-semibold text-white mb-4 uppercase tracking-wide">
+          <h3 className="text-xs font-semibold text-white mb-2 uppercase tracking-wide">
             Product
           </h3>
-          <ul className="space-y-3">
-            <li><a href="#" className="hover:text-white transition">Features</a></li>
-            <li><a href="#" className="hover:text-white transition">Integrations</a></li>
-            <li><a href="#" className="hover:text-white transition">Pricing</a></li>
-            <li><a href="#" className="hover:text-white transition">Docs</a></li>
+          <ul className="space-y-1">
+            {["Features", "Integrations", "Pricing", "Docs"].map((item) => (
+              <li key={item}>
+                <a
+                  href="#"
+                  className="hover:text-white transition rounded px-1 py-0.5 block"
+                >
+                  {item}
+                </a>
+              </li>
+            ))}
           </ul>
         </div>
 
         {/* Company Links */}
         <div>
-          <h3 className="text-sm font-semibold text-white mb-4 uppercase tracking-wide">
+          <h3 className="text-xs font-semibold text-white mb-2 uppercase tracking-wide">
             Company
           </h3>
-          <ul className="space-y-3">
-            <li><a href="#" className="hover:text-white transition">About Us</a></li>
-            <li><a href="#" className="hover:text-white transition">Careers</a></li>
-            <li><a href="#" className="hover:text-white transition">Blog</a></li>
-            <li><a href="#" className="hover:text-white transition">Contact</a></li>
+          <ul className="space-y-1">
+            {["About Us", "Careers", "Blog", "Contact"].map((item) => (
+              <li key={item}>
+                <a
+                  href="#"
+                  className="hover:text-white transition rounded px-1 py-0.5 block"
+                >
+                  {item}
+                </a>
+              </li>
+            ))}
           </ul>
         </div>
 
         {/* Legal Links */}
         <div>
-          <h3 className="text-sm font-semibold text-white mb-4 uppercase tracking-wide">
+          <h3 className="text-xs font-semibold text-white mb-2 uppercase tracking-wide">
             Legal
           </h3>
-          <ul className="space-y-3">
-            <li><a href="#" className="hover:text-white transition">Privacy Policy</a></li>
-            <li><a href="#" className="hover:text-white transition">Terms of Service</a></li>
-            <li><a href="#" className="hover:text-white transition">Cookies</a></li>
-            <li><a href="#" className="hover:text-white transition">Licenses</a></li>
+          <ul className="space-y-1">
+            {["Privacy Policy", "Terms of Service", "Cookies", "Licenses"].map(
+              (item) => (
+                <li key={item}>
+                  <a
+                    href="#"
+                    className="hover:text-white transition rounded px-1 py-0.5 block"
+                  >
+                    {item}
+                  </a>
+                </li>
+              )
+            )}
           </ul>
         </div>
       </div>
 
       {/* Bottom Bar */}
-      <div className="mt-12 border-t border-neutral-800 pt-8 flex flex-col md:flex-row items-center justify-between gap-4 text-sm">
+      <div className="mt-8 border-t border-neutral-700 border-opacity-30 pt-4 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs md:text-sm">
         <p>© {new Date().getFullYear()} DevFlick. All rights reserved.</p>
-        <div className="flex gap-5 text-lg">
-          <a href="#" aria-label="Twitter" className="hover:text-white transition">
-            <FaTwitter />
-          </a>
-          <a href="#" aria-label="Facebook" className="hover:text-white transition">
-            <FaFacebookF />
-          </a>
-          <a href="#" aria-label="GitHub" className="hover:text-white transition">
-            <FaGithub />
-          </a>
-          <a href="#" aria-label="YouTube" className="hover:text-white transition">
-            <FaYoutube />
-          </a>
+        <div className="flex gap-4">
+          {[FaTwitter, FaFacebookF, FaGithub, FaYoutube].map((Icon, i) => (
+            <a
+              key={i}
+              href="#"
+              aria-label="social"
+              className="hover:text-white transition rounded-full p-2 bg-neutral-900 hover:bg-neutral-800"
+            >
+              <Icon />
+            </a>
+          ))}
         </div>
       </div>
     </footer>

@@ -41,41 +41,39 @@ const Requests = () => {
   if (requests.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center my-20 px-4 text-center animate-fade-in">
-        <h1 className="text-3xl font-bold text-white mb-4 underline decoration-blue-500 decoration-4 underline-offset-4">
-          Connection  Requests
+        <h1 className="text-4xl font-extrabold bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 bg-clip-text text-transparent mb-4">
+          Connection Requests
         </h1>
         <p className="text-lg text-gray-400 flex items-center gap-2">
-          <span>🙅‍♂️</span>No new requests right now!
+          <span>🙅‍♂️</span> No new requests right now!
         </p>
       </div>
     );
   }
 
   return (
-    <div className="max-w-4xl mx-auto my-10 px-4">
-      <div className="text-center mb-6">
-        <h1 className="text-3xl font-bold text-white underline decoration-purple-500 decoration-4 underline-offset-8 animate-fade-in">
-          Connection Requests
+    <div className="max-w-6xl mx-auto my-12 px-4">
+      {/* Header */}
+      <div className="text-center mb-10">
+        <h1 className="text-5xl font-extrabold bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 bg-clip-text text-transparent drop-shadow-lg animate-fade-in">
+          Modern Connection Requests
         </h1>
-        <p className="text-gray-400 mt-2 flex justify-center items-center gap-2">
+        <p className="text-gray-400 mt-3 flex justify-center items-center gap-2 text-lg">
           <svg
-            className="w-5 h-5 text-blue-400"
+            className="w-6 h-6 text-blue-400"
             fill="none"
             stroke="currentColor"
             strokeWidth={2}
             viewBox="0 0 24 24"
           >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M18 9l-6 6-6-6"
-            />
+            <path strokeLinecap="round" strokeLinejoin="round" d="M18 9l-6 6-6-6" />
           </svg>
-          Accept or reject incoming connection requests.
+          Review and respond to new connection requests.
         </p>
       </div>
 
-      <div className="grid gap-6">
+      {/* Requests Grid */}
+      <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
         {requests.map((request, idx) => {
           const { _id, firstName, lastName, photoUrl, age, gender, about } =
             request.fromUserId;
@@ -83,33 +81,37 @@ const Requests = () => {
           return (
             <div
               key={_id}
-              className={`bg-base-300 p-6 rounded-xl flex flex-col sm:flex-row items-center sm:justify-between shadow-md transition hover:shadow-lg animate-fade-in delay-${idx * 100}`}
+              className="bg-white/10 backdrop-blur-md border border-white/20 p-6 rounded-2xl shadow-lg hover:shadow-2xl transition transform hover:-translate-y-1 animate-fade-in cursor-pointer"
+              style={{ animationDelay: `${idx * 150}ms` }}
             >
-              <div className="flex items-center gap-4 text-center sm:text-left">
+              {/* User Info */}
+              <div className="flex flex-col items-center text-center">
                 <img
                   alt="User"
-                  className="w-20 h-20 rounded-full object-cover transform hover:scale-105 transition duration-300"
+                  className="w-24 h-24 rounded-full object-cover border-4 border-purple-500 shadow-md transform hover:scale-105 transition duration-300 cursor-pointer"
                   src={photoUrl}
                 />
-                <div>
-                  <h2 className="font-bold text-xl text-white">
-                    {firstName + " " + lastName}
-                  </h2>
-                  {age && gender && (
-                    <p className="text-gray-300">{age}, {gender}</p>
-                  )}
-                  {about && <p className="text-gray-400">{about}</p>}
-                </div>
+                <h2 className="mt-4 font-bold text-xl text-white">
+                  {firstName + " " + lastName}
+                </h2>
+                {age && gender && (
+                  <p className="text-gray-300 text-sm">{age}, {gender}</p>
+                )}
+                {about && (
+                  <p className="text-gray-400 mt-2 text-sm line-clamp-3">{about}</p>
+                )}
               </div>
-              <div className="mt-4 sm:mt-0 flex gap-3">
+
+              {/* Action Buttons */}
+              <div className="mt-6 flex gap-4 justify-center">
                 <button
-                  className="btn btn-error text-white"
+                  className="px-5 py-2 rounded-lg bg-red-500/80 text-white font-semibold hover:bg-red-600 transition duration-200 shadow-md cursor-pointer"
                   onClick={() => reviewRequest("rejected", request._id)}
                 >
                   Reject
                 </button>
                 <button
-                  className="btn btn-success text-white"
+                  className="px-5 py-2 rounded-lg bg-green-500/80 text-white font-semibold hover:bg-green-600 transition duration-200 shadow-md cursor-pointer"
                   onClick={() => reviewRequest("accepted", request._id)}
                 >
                   Accept

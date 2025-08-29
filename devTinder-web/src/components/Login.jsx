@@ -69,7 +69,7 @@ const LoginSignup = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col md:flex-row bg-black text-white">
+    <div className="min-h-screen flex flex-col md:flex-row bg-black text-white overflow-hidden">
       <ToastContainer />
 
       {/* Left Image + Text */}
@@ -80,9 +80,10 @@ const LoginSignup = () => {
         <img
           src="https://t4.ftcdn.net/jpg/02/67/52/49/360_F_267524919_wXbVQHR189pLVU06eQ85GGLnJMq2eJFR.jpg"
           alt="background"
-          className="w-full h-full object-cover brightness-[.6]"
+          className="w-full h-full object-cover brightness-75"
         />
-        <div className="absolute inset-0 bg-black/50" />
+        {/* Gradient overlay */}
+        <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/50 to-transparent" />
         <div className="absolute z-10 px-6 lg:px-16 top-1/4 transform -translate-y-1/4">
           <BlurText
             text="👋 Welcome to DevFlick"
@@ -108,9 +109,14 @@ const LoginSignup = () => {
       {/* Right Form */}
       <div
         key={fadeKey + 1000}
-        className="md:w-1/2 w-full flex items-center justify-center p-4 sm:p-6 lg:p-10 bg-[#0f0f10] z-10"
+        className="md:w-1/2 w-full flex items-center justify-center p-4 sm:p-6 lg:p-10 relative bg-[#0f0f10] z-10"
       >
-        <div className="w-full max-w-md bg-[#1a1c23] p-6 sm:p-10 rounded-xl shadow-xl border border-gray-700">
+        {/* Decorative background blobs */}
+        <div className="absolute -top-20 -right-20 w-72 h-72 bg-blue-500/30 rounded-full blur-3xl animate-pulse" />
+        <div className="absolute bottom-10 left-10 w-64 h-64 bg-purple-500/30 rounded-full blur-3xl animate-pulse" />
+
+        {/* Actual Login Card */}
+        <div className="relative w-full max-w-md bg-[#1a1c23]/90 p-6 sm:p-10 rounded-2xl shadow-2xl border border-gray-700 backdrop-blur-lg">
           <div className="flex flex-col items-center mb-6">
             <div className="text-5xl mb-2 text-red-500 animate-pulse">🔥</div>
             <h1 className="text-2xl font-bold">👨‍💻 DevFlick</h1>
@@ -154,7 +160,7 @@ const LoginSignup = () => {
             {!isLogin && (
               <>
                 <div className="relative">
-                  <FaUser className="absolute left-3 top-3 text-gray-400" />
+                  <FaUser className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
                   <input
                     type="text"
                     placeholder="First Name"
@@ -165,7 +171,7 @@ const LoginSignup = () => {
                   />
                 </div>
                 <div className="relative">
-                  <FaUser className="absolute left-3 top-3 text-gray-400" />
+                  <FaUser className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
                   <input
                     type="text"
                     placeholder="Last Name"
@@ -178,7 +184,7 @@ const LoginSignup = () => {
               </>
             )}
             <div className="relative">
-              <FaEnvelope className="absolute left-3 top-3 text-gray-400" />
+              <FaEnvelope className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
               <input
                 type="email"
                 placeholder="Email Address"
@@ -189,7 +195,7 @@ const LoginSignup = () => {
               />
             </div>
             <div className="relative">
-              <FaLock className="absolute left-3 top-3 text-gray-400" />
+              <FaLock className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
               <input
                 type={showPassword ? "text" : "password"}
                 placeholder="Password"
@@ -199,7 +205,7 @@ const LoginSignup = () => {
                 required
               />
               <div
-                className="absolute right-3 top-3 text-gray-400 cursor-pointer"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 cursor-pointer"
                 onClick={() => setShowPassword(!showPassword)}
               >
                 {showPassword ? <FaEye /> : <FaEyeSlash />}
