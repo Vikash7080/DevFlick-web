@@ -5,7 +5,7 @@ import { BASE_URL } from "../utils/constants";
 import { addUser } from "../utils/userSlice";
 import UserCard from "./UserCard";
 import { AnimatePresence, motion } from "framer-motion";
-import { Github } from "lucide-react";
+import { Github, User, Info, PlusCircle, Save } from "lucide-react";
 
 const EditProfile = () => {
   const user = useSelector((store) => store.user);
@@ -70,34 +70,45 @@ const EditProfile = () => {
 
   return (
     <>
-      <div className="flex flex-col lg:flex-row gap-10 px-4 py-10 max-w-6xl mx-auto">
+      <div className="flex flex-col lg:flex-row gap-10 px-6 py-10 max-w-6xl mx-auto">
         {/* LEFT PANEL */}
-        <div className="bg-base-300 w-full lg:w-1/2 rounded-2xl shadow-xl border border-neutral/20 p-8">
-          <h2 className="text-3xl font-bold text-center mb-8 text-white">
-            Edit Profile
+        <motion.div
+          initial={{ opacity: 0, x: -40 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.5 }}
+          className="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 
+                     w-full lg:w-1/2 rounded-3xl shadow-2xl border border-gray-700/50 
+                     p-8 backdrop-blur-lg"
+        >
+          <h2 className="text-4xl font-extrabold text-center mb-8 
+                         bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 
+                         bg-clip-text text-transparent drop-shadow-md">
+            ✨ Edit Your Profile
           </h2>
 
           {/* Tabs */}
-          <div className="flex justify-center gap-3 mb-8">
+          <div className="flex justify-center gap-4 mb-10">
             <button
               onClick={() => setActiveTab("basic")}
-              className={`px-6 py-2 rounded-full text-sm font-medium transition cursor-pointer ${
-                activeTab === "basic"
-                  ? "bg-primary text-white shadow-lg"
-                  : "bg-neutral text-white/70 hover:bg-neutral/80"
-              }`}
+              className={`px-6 py-2.5 rounded-full text-sm font-semibold transition cursor-pointer flex items-center gap-2
+                ${
+                  activeTab === "basic"
+                    ? "bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-lg scale-105"
+                    : "bg-gray-800 text-gray-300 hover:bg-gray-700"
+                }`}
             >
-              Basic Info
+              <User size={16} /> Basic Info
             </button>
             <button
               onClick={() => setActiveTab("social")}
-              className={`px-6 py-2 rounded-full text-sm font-medium transition cursor-pointer ${
-                activeTab === "social"
-                  ? "bg-primary text-white shadow-lg"
-                  : "bg-neutral text-white/70 hover:bg-neutral/80"
-              }`}
+              className={`px-6 py-2.5 rounded-full text-sm font-semibold transition cursor-pointer flex items-center gap-2
+                ${
+                  activeTab === "social"
+                    ? "bg-gradient-to-r from-pink-500 to-red-500 text-white shadow-lg scale-105"
+                    : "bg-gray-800 text-gray-300 hover:bg-gray-700"
+                }`}
             >
-              Social Links
+              <Info size={16} /> Social Links
             </button>
           </div>
 
@@ -105,9 +116,11 @@ const EditProfile = () => {
           {activeTab === "basic" && (
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
               <label className="form-control">
-                <span className="label-text font-medium">First Name</span>
+                <span className="label-text font-semibold text-gray-200">
+                  First Name
+                </span>
                 <input
-                  className="input input-bordered"
+                  className="input input-bordered bg-gray-800 text-white focus:ring-2 focus:ring-pink-500"
                   value={firstName}
                   onChange={(e) => setFirstName(e.target.value)}
                   placeholder="Enter first name"
@@ -115,9 +128,11 @@ const EditProfile = () => {
               </label>
 
               <label className="form-control">
-                <span className="label-text font-medium">Last Name</span>
+                <span className="label-text font-semibold text-gray-200">
+                  Last Name
+                </span>
                 <input
-                  className="input input-bordered"
+                  className="input input-bordered bg-gray-800 text-white focus:ring-2 focus:ring-pink-500"
                   value={lastName}
                   onChange={(e) => setLastName(e.target.value)}
                   placeholder="Enter last name"
@@ -125,9 +140,11 @@ const EditProfile = () => {
               </label>
 
               <label className="form-control col-span-full">
-                <span className="label-text font-medium">Photo URL</span>
+                <span className="label-text font-semibold text-gray-200">
+                  Photo URL
+                </span>
                 <input
-                  className="input input-bordered"
+                  className="input input-bordered bg-gray-800 text-white focus:ring-2 focus:ring-pink-500"
                   value={photoUrl}
                   onChange={(e) => setPhotoUrl(e.target.value)}
                   placeholder="https://..."
@@ -135,11 +152,13 @@ const EditProfile = () => {
               </label>
 
               <label className="form-control">
-                <span className="label-text font-medium">Age</span>
+                <span className="label-text font-semibold text-gray-200">
+                  Age
+                </span>
                 <input
                   type="number"
                   min="0"
-                  className="input input-bordered"
+                  className="input input-bordered bg-gray-800 text-white focus:ring-2 focus:ring-pink-500"
                   value={age}
                   onChange={(e) => setAge(e.target.value)}
                   placeholder="Age"
@@ -147,9 +166,11 @@ const EditProfile = () => {
               </label>
 
               <label className="form-control">
-                <span className="label-text font-medium">Gender</span>
+                <span className="label-text font-semibold text-gray-200">
+                  Gender
+                </span>
                 <select
-                  className="select select-bordered"
+                  className="select select-bordered bg-gray-800 text-white focus:ring-2 focus:ring-pink-500"
                   value={gender}
                   onChange={(e) => setGender(e.target.value)}
                 >
@@ -160,35 +181,38 @@ const EditProfile = () => {
                 </select>
               </label>
 
-              {/* Skills Section (moved up) */}
+              {/* Skills */}
               <label className="form-control col-span-full">
-                <span className="label-text font-medium">Skills</span>
+                <span className="label-text font-semibold text-gray-200">
+                  Skills
+                </span>
                 <div className="flex gap-2">
                   <input
-                    className="input input-bordered flex-1"
+                    className="input input-bordered bg-gray-800 text-white flex-1 focus:ring-2 focus:ring-pink-500"
                     value={newSkill}
                     onChange={(e) => setNewSkill(e.target.value)}
                     placeholder="e.g. React"
                   />
                   <button
                     type="button"
-                    className="btn btn-primary"
+                    className="btn btn-primary flex items-center gap-1 bg-gradient-to-r from-purple-500 to-pink-500 border-none"
                     onClick={addSkill}
                   >
-                    Add
+                    <PlusCircle size={16} /> Add
                   </button>
                 </div>
                 <div className="flex flex-wrap gap-2 mt-3">
                   {skills.map((skill, idx) => (
                     <span
                       key={idx}
-                      className="px-3 py-1 bg-primary/20 text-primary font-medium rounded-full text-sm flex items-center gap-2"
+                      className="px-3 py-1 bg-pink-500/20 text-pink-400 font-medium 
+                                 rounded-full text-sm flex items-center gap-2 border border-pink-500/40"
                     >
                       {skill}
                       <button
                         type="button"
                         onClick={() => removeSkill(skill)}
-                        className="text-xs hover:text-red-500"
+                        className="text-xs hover:text-red-400"
                       >
                         ✕
                       </button>
@@ -197,11 +221,13 @@ const EditProfile = () => {
                 </div>
               </label>
 
-              {/* About Section (moved down) */}
+              {/* About */}
               <label className="form-control col-span-full">
-                <span className="label-text font-medium">About</span>
+                <span className="label-text font-semibold text-gray-200">
+                  About
+                </span>
                 <textarea
-                  className="textarea textarea-bordered h-28"
+                  className="textarea textarea-bordered bg-gray-800 text-white h-28 focus:ring-2 focus:ring-pink-500"
                   maxLength={200}
                   value={about}
                   onChange={(e) => setAbout(e.target.value)}
@@ -215,13 +241,13 @@ const EditProfile = () => {
           )}
 
           {activeTab === "social" && (
-            <div className="space-y-5">
+            <div className="space-y-6">
               <label className="form-control">
-                <span className="label-text font-medium flex items-center gap-2">
+                <span className="label-text font-semibold text-gray-200 flex items-center gap-2">
                   <Github size={16} /> GitHub Profile
                 </span>
                 <input
-                  className="input input-bordered rounded-xl focus:ring-2 focus:ring-primary transition"
+                  className="input input-bordered bg-gray-800 text-white rounded-xl focus:ring-2 focus:ring-pink-500"
                   value={githubUrl}
                   onChange={(e) => setGithubUrl(e.target.value)}
                   placeholder="https://github.com/username"
@@ -232,20 +258,25 @@ const EditProfile = () => {
 
           {error && <p className="text-sm text-red-500 mt-4">{error}</p>}
 
-          <button
-            className="btn btn-primary w-full mt-8 font-semibold text-lg"
+          <motion.button
+            whileTap={{ scale: 0.95 }}
+            whileHover={{ scale: 1.03 }}
+            className="btn btn-primary w-full mt-10 font-semibold text-lg 
+                       bg-gradient-to-r from-purple-500 via-pink-500 to-red-500 border-none shadow-lg"
             onClick={saveProfile}
           >
-            Save Profile
-          </button>
-        </div>
+            <Save size={18} /> Save Profile
+          </motion.button>
+        </motion.div>
 
         {/* RIGHT PANEL */}
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
+          initial={{ opacity: 0, x: 40 }}
+          animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.5 }}
-          className="bg-base-300 w-full lg:w-1/2 rounded-2xl shadow-xl border border-neutral/20 p-6 flex items-center justify-center"
+          className="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 
+                     w-full lg:w-1/2 rounded-3xl shadow-2xl border border-gray-700/50 
+                     p-6 flex items-center justify-center"
         >
           <div className="w-full max-w-sm">
             <UserCard
@@ -275,7 +306,7 @@ const EditProfile = () => {
             transition={{ duration: 0.3 }}
             className="toast toast-top toast-center z-50 fixed top-4 left-1/2 -translate-x-1/2"
           >
-            <div className="alert alert-success shadow-lg">
+            <div className="alert alert-success shadow-lg bg-green-600 text-white rounded-xl px-6 py-3">
               <span>✅ Profile saved successfully.</span>
             </div>
           </motion.div>

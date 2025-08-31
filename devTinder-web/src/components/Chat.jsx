@@ -12,7 +12,7 @@ const Chat = () => {
   const { targetUserId } = useParams();
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
-  const [typingUser, setTypingUser] = useState(null); // NEW: typing indicator
+  const [typingUser, setTypingUser] = useState(null);
   const user = useSelector((store) => store.user);
   const userId = user?._id;
   const socketRef = useRef(null);
@@ -62,11 +62,10 @@ const Chat = () => {
       setMessages((prev) => [...prev, msg]);
     });
 
-    // 🔥 Listen for typing events
     socket.on("userTyping", ({ userId: typingId }) => {
       if (typingId !== userId) {
         setTypingUser("User is typing...");
-        setTimeout(() => setTypingUser(null), 2000); // auto clear after 2s
+        setTimeout(() => setTypingUser(null), 2000);
       }
     });
 
@@ -99,11 +98,12 @@ const Chat = () => {
 
   return (
     <div className="w-full md:w-3/4 mx-auto mt-6 h-[85vh] flex flex-col 
-      bg-gradient-to-br from-gray-900 via-gray-950 to-black 
-      rounded-2xl shadow-2xl overflow-hidden border border-gray-800 backdrop-blur-xl">
+      bg-gradient-to-br from-[#0f0c29] via-[#302b63] to-[#24243e]
+      rounded-2xl shadow-2xl overflow-hidden border border-gray-700 backdrop-blur-xl">
       
       {/* Header */}
-      <div className="p-4 border-b border-gray-800 flex items-center justify-between bg-gray-900/60 backdrop-blur-md">
+      <div className="p-4 border-b border-gray-700 flex items-center justify-between 
+        bg-gradient-to-r from-purple-700/40 to-indigo-700/40 backdrop-blur-md">
         <h1 className="text-lg font-bold text-white tracking-wide flex items-center gap-2">
           💬 Live Chat
         </h1>
@@ -113,8 +113,8 @@ const Chat = () => {
       </div>
 
       {/* Messages */}
-      <div className="flex-1 overflow-y-auto p-5 space-y-4 scrollbar-thin 
-        scrollbar-thumb-gray-700 scrollbar-track-transparent">
+      <div className="flex-1 overflow-y-auto p-5 space-y-5 scrollbar-thin 
+        scrollbar-thumb-purple-600 scrollbar-track-transparent">
         {messages.map((msg, index) => {
           const isUser = userId === msg.userId;
           const time = new Date(msg.createdAt || Date.now());
@@ -126,27 +126,27 @@ const Chat = () => {
           return (
             <motion.div
               key={index}
-              initial={{ opacity: 0, y: 10 }}
+              initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.2 }}
+              transition={{ duration: 0.25 }}
               className={`flex flex-col max-w-full sm:max-w-[75%] ${
                 isUser ? "ml-auto items-end" : "items-start"
               }`}
             >
-              <div className="text-xs text-gray-400 mb-1">
+              <div className="text-xs text-gray-300 mb-1">
                 {`${msg.firstName} ${msg.lastName}`}
               </div>
               <div
                 className={`px-4 py-2 rounded-2xl text-sm shadow-lg 
                   backdrop-blur-md break-words transition-all duration-300 ${
                     isUser
-                      ? "bg-gradient-to-r from-indigo-600 to-blue-500 text-white rounded-br-none hover:shadow-indigo-500/40"
-                      : "bg-gray-800/70 text-gray-100 rounded-bl-none hover:shadow-gray-600/40"
+                      ? "bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500 text-white rounded-br-none hover:shadow-pink-400/40"
+                      : "bg-gradient-to-r from-indigo-500 via-purple-500 to-blue-500 text-white rounded-bl-none hover:shadow-indigo-400/40"
                   }`}
               >
                 {msg.text}
               </div>
-              <div className="text-[10px] text-gray-400 mt-1 flex justify-end pr-2">
+              <div className="text-[10px] text-gray-300 mt-1 flex justify-end pr-2">
                 {formattedTime}
               </div>
             </motion.div>
@@ -154,23 +154,24 @@ const Chat = () => {
         })}
         <div ref={messagesEndRef} />
       </div>
-{/*typing indicator*/}
-{typingUser && (
-  <div className="px-4 pb-1 text-xs flex items-center gap-1">
-    <span className="bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent font-semibold">
-      Typing
-    </span>
-    <span className="flex space-x-1">
-      <span className="h-2 w-2 rounded-full bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 animate-bounce [animation-delay:-0.3s]"></span>
-      <span className="h-2 w-2 rounded-full bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 animate-bounce [animation-delay:-0.15s]"></span>
-      <span className="h-2 w-2 rounded-full bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 animate-bounce"></span>
-    </span>
-  </div>
-)}
 
+      {/* Typing Indicator */}
+      {typingUser && (
+        <div className="px-4 pb-2 text-xs flex items-center gap-2 animate-fade-in">
+          <span className="bg-gradient-to-r from-pink-400 via-purple-400 to-indigo-400 bg-clip-text text-transparent font-semibold">
+            Typing
+          </span>
+          <span className="flex space-x-1">
+            <span className="h-2 w-2 rounded-full bg-pink-400 animate-bounce [animation-delay:-0.3s]"></span>
+            <span className="h-2 w-2 rounded-full bg-purple-400 animate-bounce [animation-delay:-0.15s]"></span>
+            <span className="h-2 w-2 rounded-full bg-indigo-400 animate-bounce"></span>
+          </span>
+        </div>
+      )}
 
       {/* Input */}
-      <div className="p-4 border-t border-gray-800 bg-gray-900/60 backdrop-blur-md flex items-center gap-3">
+      <div className="p-4 border-t border-gray-700 bg-gradient-to-r from-indigo-900/50 to-purple-900/50 
+        backdrop-blur-md flex items-center gap-3">
         <input
           value={newMessage}
           onChange={(e) => {
@@ -181,15 +182,16 @@ const Chat = () => {
             }
           }}
           placeholder="Type a message..."
-          className="flex-1 bg-gray-800/70 border border-gray-700 text-white rounded-full px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 placeholder-gray-400 transition"
+          className="flex-1 bg-gray-900/70 border border-gray-700 text-white rounded-full px-4 py-2 text-sm 
+            focus:outline-none focus:ring-2 focus:ring-pink-500 placeholder-gray-400 transition"
           onKeyDown={(e) => e.key === "Enter" && sendMessage()}
         />
         <motion.button
           whileTap={{ scale: 0.9 }}
           whileHover={{ scale: 1.1 }}
           onClick={sendMessage}
-          className="bg-gradient-to-r from-indigo-600 to-blue-500 hover:from-indigo-500 hover:to-blue-400 
-            text-white p-3 rounded-full shadow-md shadow-indigo-500/30 transition flex items-center justify-center"
+          className="bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500 hover:from-pink-400 hover:to-yellow-400 
+            text-white p-3 rounded-full shadow-md shadow-pink-500/40 transition flex items-center justify-center"
         >
           <Send className="w-5 h-5" />
         </motion.button>

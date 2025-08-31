@@ -2,7 +2,7 @@ import axios from "axios";
 import { BASE_URL } from "../utils/constants";
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { Check, X, Loader2 } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import React from "react";
 
 const Premium = () => {
@@ -18,9 +18,7 @@ const Premium = () => {
       const res = await axios.get(BASE_URL + "/premium/verify", {
         withCredentials: true,
       });
-      if (res.data.isPremium) {
-        setIsUserPremium(true);
-      }
+      if (res.data.isPremium) setIsUserPremium(true);
     } catch (err) {
       console.error("Error verifying premium user", err);
     }
@@ -51,16 +49,8 @@ const Premium = () => {
         },
         theme: { color: "#2563EB" },
         handler: async function (response) {
-          try {
-            console.log("Payment success:", response);
-            // Webhook backend pe call hoga → user premium banega
-            // thoda delay de ke dobara verify call
-            setTimeout(() => verifyPremiumUser(), 3000);
-          } catch (err) {
-            console.error("Payment handling failed:", err);
-          } finally {
-            setLoading(false);
-          }
+          console.log("Payment success:", response);
+          setTimeout(() => verifyPremiumUser(), 3000);
         },
         modal: {
           ondismiss: () => setLoading(false),
@@ -81,9 +71,9 @@ const Premium = () => {
         initial={{ opacity: 0, y: 50 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.7 }}
-        className="flex justify-center items-center h-[80vh] text-center"
+        className="flex justify-center items-center h-[80vh] text-center px-4"
       >
-        <div className="bg-green-100 border border-green-300 rounded-2xl shadow-lg p-10">
+        <div className="bg-green-100 border border-green-300 rounded-2xl shadow-lg p-10 max-w-lg">
           <h1 className="text-3xl font-bold text-green-700">
             🎉 You're already a Premium Member!
           </h1>
@@ -113,8 +103,15 @@ const Premium = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.2 }}
           whileHover={{ scale: 1.05 }}
-          className="bg-white shadow-xl rounded-2xl p-8 flex flex-col justify-between"
+          className="bg-white shadow-lg rounded-3xl p-8 flex flex-col justify-between border border-gray-200 hover:shadow-blue-400/30 transition-all duration-300 relative"
         >
+          <motion.div
+            className="absolute top-4 right-4 bg-blue-100 text-blue-700 px-3 py-1 rounded-full font-semibold text-sm shadow"
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+          >
+            Starter
+          </motion.div>
           <div>
             <h2 className="text-3xl font-semibold text-gray-800">
               Silver Membership
@@ -134,7 +131,7 @@ const Premium = () => {
             className={`mt-8 w-full py-3 rounded-xl text-white font-semibold transition-all cursor-pointer flex items-center justify-center ${
               loading
                 ? "bg-blue-300 cursor-not-allowed"
-                : "bg-blue-500 hover:bg-blue-600"
+                : "bg-blue-500 hover:bg-blue-600 shadow-md hover:shadow-blue-400/50"
             }`}
           >
             {loading ? (
@@ -153,12 +150,20 @@ const Premium = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.4 }}
           whileHover={{ scale: 1.05 }}
-          className="bg-gradient-to-br from-yellow-100 to-yellow-200 shadow-2xl rounded-2xl p-8 flex flex-col justify-between border-2 border-yellow-400"
+          className="relative bg-gradient-to-br from-yellow-100 to-yellow-200 shadow-2xl rounded-3xl p-8 flex flex-col justify-between border-2 border-yellow-400 hover:shadow-yellow-400/40 transition-all duration-300"
         >
+          {/* Premium Badge */}
+          <motion.div
+            initial={{ scale: 0 }}
+            animate={{ scale: 1, rotate: [0, 10, -10, 0] }}
+            transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
+            className="absolute -top-4 -right-4 bg-yellow-400 text-white font-bold px-3 py-1 rounded-full shadow-lg text-sm flex items-center gap-1"
+          >
+            ⭐ PREMIUM
+          </motion.div>
+
           <div>
-            <h2 className="text-3xl font-bold text-gray-900">
-              Gold Membership ⭐
-            </h2>
+            <h2 className="text-3xl font-bold text-gray-900">Gold Membership ⭐</h2>
             <p className="text-gray-600 mt-2">Most Popular</p>
             <ul className="mt-6 space-y-3 text-gray-800">
               <li>✔ Chat with developers</li>
@@ -171,10 +176,10 @@ const Premium = () => {
             whileTap={{ scale: 0.95 }}
             disabled={loading}
             onClick={() => handleBuyClick("gold")}
-            className={`mt-8 w-full py-3 rounded-xl text-white font-bold transition-all cursor-pointer flex items-center justify-center ${
+            className={`mt-8 w-full py-3 rounded-xl text-white font-bold flex items-center justify-center transition-all duration-300 cursor-pointer ${
               loading
                 ? "bg-yellow-300 cursor-not-allowed"
-                : "bg-yellow-500 hover:bg-yellow-600"
+                : "bg-yellow-500 hover:bg-yellow-600 shadow-md hover:shadow-yellow-400/50"
             }`}
           >
             {loading ? (
