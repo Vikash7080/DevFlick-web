@@ -7,7 +7,7 @@ import React from "react";
 
 const Premium = () => {
   const [isUserPremium, setIsUserPremium] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [loadingPlan, setLoadingPlan] = useState(null); // null | "silver" | "gold"
 
   useEffect(() => {
     verifyPremiumUser();
@@ -15,9 +15,7 @@ const Premium = () => {
 
   const verifyPremiumUser = async () => {
     try {
-      const res = await axios.get(BASE_URL + "/premium/verify", {
-        withCredentials: true,
-      });
+      const res = await axios.get(BASE_URL + "/premium/verify", { withCredentials: true });
       if (res.data.isPremium) setIsUserPremium(true);
     } catch (err) {
       console.error("Error verifying premium user", err);
@@ -26,7 +24,7 @@ const Premium = () => {
 
   const handleBuyClick = async (type) => {
     try {
-      setLoading(true);
+      setLoadingPlan(type);
       const order = await axios.post(
         BASE_URL + "/payment/create",
         { membershipType: type },
@@ -48,12 +46,12 @@ const Premium = () => {
           contact: "9999999999",
         },
         theme: { color: "#2563EB" },
-        handler: async function (response) {
+        handler: function (response) {
           console.log("Payment success:", response);
           setTimeout(() => verifyPremiumUser(), 3000);
         },
         modal: {
-          ondismiss: () => setLoading(false),
+          ondismiss: () => setLoadingPlan(null),
         },
       };
 
@@ -61,7 +59,7 @@ const Premium = () => {
       rzp.open();
     } catch (err) {
       console.error("Error creating payment", err);
-      setLoading(false);
+      setLoadingPlan(null);
     }
   };
 
@@ -86,24 +84,30 @@ const Premium = () => {
   }
 
   return (
-    <div className="py-16 px-6 bg-gradient-to-b from-gray-50 to-gray-100 min-h-screen">
+    <div className="py-16 px-6 bg-gradient-to-b from-gray-50 to-gray-100 min-h-screen relative overflow-hidden">
+      {/* Subtle background shimmer */}
+      <motion.div
+        className="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-blue-50 via-purple-50 to-pink-50 opacity-30 animate-pulse"
+        style={{ zIndex: 0 }}
+      />
+
       <motion.h1
         initial={{ opacity: 0, scale: 0.8 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.8 }}
-        className="text-4xl md:text-5xl font-bold text-center text-gray-800 mb-10"
+        className="text-4xl md:text-5xl font-bold text-center text-gray-800 mb-10 relative z-10"
       >
         Choose Your <span className="text-blue-600">Premium Plan</span>
       </motion.h1>
 
-      <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-8">
+      <div className="max-w-6xl mx-auto grid gap-8 md:grid-cols-2 relative z-10">
         {/* Silver Plan */}
         <motion.div
           initial={{ opacity: 0, y: 80 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.2 }}
-          whileHover={{ scale: 1.05 }}
-          className="bg-white shadow-lg rounded-3xl p-8 flex flex-col justify-between border border-gray-200 hover:shadow-blue-400/30 transition-all duration-300 relative"
+          whileHover={{ scale: 1.04, boxShadow: "0px 15px 30px rgba(59, 130, 246, 0.3)" }}
+          className={`bg-white shadow-lg rounded-3xl p-8 flex flex-col justify-between border border-gray-200 transition-all duration-300`}
         >
           <motion.div
             className="absolute top-4 right-4 bg-blue-100 text-blue-700 px-3 py-1 rounded-full font-semibold text-sm shadow"
@@ -113,28 +117,26 @@ const Premium = () => {
             Starter
           </motion.div>
           <div>
-            <h2 className="text-3xl font-semibold text-gray-800">
-              Silver Membership
-            </h2>
+            <h2 className="text-3xl font-semibold text-gray-800">Silver Membership</h2>
             <p className="text-gray-500 mt-2">Best for starters</p>
-            <ul className="mt-6 space-y-3 text-gray-700">
-              <li>✔ Chat with developers</li>
-              <li>✔ 100 connection requests / day</li>
-              <li>✔ Blue verification tick</li>
-              <li>✔ Valid for 3 months</li>
+            <ul className="mt-6 space-y-3 text-gray-700 list-disc list-inside">
+              <li>Chat with developers</li>
+              <li>100 connection requests / day</li>
+              <li>Blue verification tick</li>
+              <li>Valid for 3 months</li>
             </ul>
           </div>
           <motion.button
             whileTap={{ scale: 0.95 }}
-            disabled={loading}
+            disabled={loadingPlan !== null}
             onClick={() => handleBuyClick("silver")}
             className={`mt-8 w-full py-3 rounded-xl text-white font-semibold transition-all cursor-pointer flex items-center justify-center ${
-              loading
+              loadingPlan === "silver"
                 ? "bg-blue-300 cursor-not-allowed"
                 : "bg-blue-500 hover:bg-blue-600 shadow-md hover:shadow-blue-400/50"
             }`}
           >
-            {loading ? (
+            {loadingPlan === "silver" ? (
               <>
                 <Loader2 className="animate-spin w-5 h-5 mr-2" /> Processing...
               </>
@@ -149,10 +151,9 @@ const Premium = () => {
           initial={{ opacity: 0, y: 80 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.4 }}
-          whileHover={{ scale: 1.05 }}
-          className="relative bg-gradient-to-br from-yellow-100 to-yellow-200 shadow-2xl rounded-3xl p-8 flex flex-col justify-between border-2 border-yellow-400 hover:shadow-yellow-400/40 transition-all duration-300"
+          whileHover={{ scale: 1.04, boxShadow: "0px 15px 30px rgba(245, 158, 11, 0.3)" }}
+          className="relative bg-gradient-to-br from-yellow-100 to-yellow-200 shadow-2xl rounded-3xl p-8 flex flex-col justify-between border-2 border-yellow-400 transition-all duration-300"
         >
-          {/* Premium Badge */}
           <motion.div
             initial={{ scale: 0 }}
             animate={{ scale: 1, rotate: [0, 10, -10, 0] }}
@@ -165,24 +166,24 @@ const Premium = () => {
           <div>
             <h2 className="text-3xl font-bold text-gray-900">Gold Membership ⭐</h2>
             <p className="text-gray-600 mt-2">Most Popular</p>
-            <ul className="mt-6 space-y-3 text-gray-800">
-              <li>✔ Chat with developers</li>
-              <li>✔ Unlimited connection requests</li>
-              <li>✔ Blue verification tick</li>
-              <li>✔ Valid for 6 months</li>
+            <ul className="mt-6 space-y-3 text-gray-800 list-disc list-inside">
+              <li>Chat with developers</li>
+              <li>Unlimited connection requests</li>
+              <li>Blue verification tick</li>
+              <li>Valid for 6 months</li>
             </ul>
           </div>
           <motion.button
             whileTap={{ scale: 0.95 }}
-            disabled={loading}
+            disabled={loadingPlan !== null}
             onClick={() => handleBuyClick("gold")}
             className={`mt-8 w-full py-3 rounded-xl text-white font-bold flex items-center justify-center transition-all duration-300 cursor-pointer ${
-              loading
+              loadingPlan === "gold"
                 ? "bg-yellow-300 cursor-not-allowed"
                 : "bg-yellow-500 hover:bg-yellow-600 shadow-md hover:shadow-yellow-400/50"
             }`}
           >
-            {loading ? (
+            {loadingPlan === "gold" ? (
               <>
                 <Loader2 className="animate-spin w-5 h-5 mr-2" /> Processing...
               </>
@@ -197,7 +198,7 @@ const Premium = () => {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1 }}
-        className="mt-12 text-center text-gray-500 text-sm"
+        className="mt-12 text-center text-gray-500 text-sm relative z-10"
       >
         Secure payments powered by Razorpay 🔒
       </motion.p>
