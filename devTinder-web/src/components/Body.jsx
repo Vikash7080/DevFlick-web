@@ -13,21 +13,24 @@ const Body = () => {
   const userData = useSelector((store) => store.user);
   const [loading, setLoading] = useState(true);
 
-  const fetchUser = async () => {
-    try {
-      const res = await axios.get(BASE_URL + "/profile/view", {
-        withCredentials: true,
-      });
+ const fetchUser = async () => {
+  try {
+    const res = await axios.get(BASE_URL + "/profile/view", {
+      withCredentials: true,
+    });
+    if (res.data) {
       dispatch(addUser(res.data));
-    } catch (err) {
-      if (err.response?.status === 401) {
-        navigate("/login");
-      }
-      console.error(err);
-    } finally {
-      setLoading(false);
+    } else {
+      navigate("/login"); // optional redirect if user not logged in
     }
-  };
+  } catch (err) {
+    setLoading(false);
+    
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   useEffect(() => {
     fetchUser();
