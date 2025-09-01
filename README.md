@@ -37,10 +37,10 @@ Inspired by **Tinder**, users can swipe left to ignore or right to connect, with
 ## 📸 Screenshots
 
 ### 1. Home/Login Page
-![Login](./ReadmeAssets/images/1.png)
+![Login](./devTinder-web/ReadmeAssets/images/1.png)
 
 ### 2. SignUp Page
-![SignUp](devTinder-web/ReadmeAssets/images/2.png)
+![SignUp](./devTinder-web/ReadmeAssets/images/2.png)
 
 
 ## 🧠 Upcoming Features
