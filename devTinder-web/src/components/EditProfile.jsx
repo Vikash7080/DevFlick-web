@@ -24,17 +24,17 @@ const EditProfile = () => {
   const [showToast, setShowToast] = useState(false);
   const [activeTab, setActiveTab] = useState("basic");
 
+  // ✅ Initialize fields only if user exists
   useEffect(() => {
-    if (user) {
-      setFirstName(user.firstName || "");
-      setLastName(user.lastName || "");
-      setPhotoUrl(user.photoUrl || "");
-      setAge(user.age || "");
-      setGender(user.gender || "");
-      setAbout(user.about || "");
-      setSkills(user.skills || []);
-      setGithubUrl(user.githubUrl || "");
-    }
+    if (!user) return;
+    setFirstName(user.firstName || "");
+    setLastName(user.lastName || "");
+    setPhotoUrl(user.photoUrl || "");
+    setAge(user.age || "");
+    setGender(user.gender || "");
+    setAbout(user.about || "");
+    setSkills(user.skills || []);
+    setGithubUrl(user.githubUrl || "");
   }, [user]);
 
   const addSkill = () => {
@@ -49,6 +49,8 @@ const EditProfile = () => {
   };
 
   const saveProfile = async () => {
+    if (!user) return; // 🔒 Guard: unauthenticated user cannot save
+
     setError("");
     try {
       const res = await axios.patch(
@@ -56,7 +58,7 @@ const EditProfile = () => {
         { firstName, lastName, photoUrl, age, gender, about, skills, githubUrl },
         { withCredentials: true }
       );
-      dispatch(addUser(res?.data?.data));
+      if (res?.data?.data) dispatch(addUser(res.data.data));
       setShowToast(true);
       setTimeout(() => setShowToast(false), 3000);
     } catch (err) {
@@ -76,13 +78,9 @@ const EditProfile = () => {
           initial={{ opacity: 0, x: -40 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.5 }}
-          className="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 
-                     w-full lg:w-1/2 rounded-3xl shadow-2xl border border-gray-700/50 
-                     p-8 backdrop-blur-lg"
+          className="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 w-full lg:w-1/2 rounded-3xl shadow-2xl border border-gray-700/50 p-8 backdrop-blur-lg"
         >
-          <h2 className="text-4xl font-extrabold text-center mb-8 
-                         bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 
-                         bg-clip-text text-transparent drop-shadow-md">
+          <h2 className="text-4xl font-extrabold text-center mb-8 bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 bg-clip-text text-transparent drop-shadow-md">
             ✨ Edit Your Profile
           </h2>
 
@@ -90,23 +88,21 @@ const EditProfile = () => {
           <div className="flex justify-center gap-4 mb-10">
             <button
               onClick={() => setActiveTab("basic")}
-              className={`px-6 py-2.5 rounded-full text-sm font-semibold transition cursor-pointer flex items-center gap-2
-                ${
-                  activeTab === "basic"
-                    ? "bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-lg scale-105"
-                    : "bg-gray-800 text-gray-300 hover:bg-gray-700"
-                }`}
+              className={`px-6 py-2.5 rounded-full text-sm font-semibold transition cursor-pointer flex items-center gap-2 ${
+                activeTab === "basic"
+                  ? "bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-lg scale-105"
+                  : "bg-gray-800 text-gray-300 hover:bg-gray-700"
+              }`}
             >
               <User size={16} /> Basic Info
             </button>
             <button
               onClick={() => setActiveTab("social")}
-              className={`px-6 py-2.5 rounded-full text-sm font-semibold transition cursor-pointer flex items-center gap-2
-                ${
-                  activeTab === "social"
-                    ? "bg-gradient-to-r from-pink-500 to-red-500 text-white shadow-lg scale-105"
-                    : "bg-gray-800 text-gray-300 hover:bg-gray-700"
-                }`}
+              className={`px-6 py-2.5 rounded-full text-sm font-semibold transition cursor-pointer flex items-center gap-2 ${
+                activeTab === "social"
+                  ? "bg-gradient-to-r from-pink-500 to-red-500 text-white shadow-lg scale-105"
+                  : "bg-gray-800 text-gray-300 hover:bg-gray-700"
+              }`}
             >
               <Info size={16} /> Social Links
             </button>
@@ -115,10 +111,9 @@ const EditProfile = () => {
           {/* TAB CONTENT */}
           {activeTab === "basic" && (
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+              {/* First Name */}
               <label className="form-control">
-                <span className="label-text font-semibold text-gray-200">
-                  First Name
-                </span>
+                <span className="label-text font-semibold text-gray-200">First Name</span>
                 <input
                   className="input input-bordered bg-gray-800 text-white focus:ring-2 focus:ring-pink-500"
                   value={firstName}
@@ -127,10 +122,9 @@ const EditProfile = () => {
                 />
               </label>
 
+              {/* Last Name */}
               <label className="form-control">
-                <span className="label-text font-semibold text-gray-200">
-                  Last Name
-                </span>
+                <span className="label-text font-semibold text-gray-200">Last Name</span>
                 <input
                   className="input input-bordered bg-gray-800 text-white focus:ring-2 focus:ring-pink-500"
                   value={lastName}
@@ -139,10 +133,9 @@ const EditProfile = () => {
                 />
               </label>
 
+              {/* Photo URL */}
               <label className="form-control col-span-full">
-                <span className="label-text font-semibold text-gray-200">
-                  Photo URL
-                </span>
+                <span className="label-text font-semibold text-gray-200">Photo URL</span>
                 <input
                   className="input input-bordered bg-gray-800 text-white focus:ring-2 focus:ring-pink-500"
                   value={photoUrl}
@@ -151,10 +144,9 @@ const EditProfile = () => {
                 />
               </label>
 
+              {/* Age */}
               <label className="form-control">
-                <span className="label-text font-semibold text-gray-200">
-                  Age
-                </span>
+                <span className="label-text font-semibold text-gray-200">Age</span>
                 <input
                   type="number"
                   min="0"
@@ -165,10 +157,9 @@ const EditProfile = () => {
                 />
               </label>
 
+              {/* Gender */}
               <label className="form-control">
-                <span className="label-text font-semibold text-gray-200">
-                  Gender
-                </span>
+                <span className="label-text font-semibold text-gray-200">Gender</span>
                 <select
                   className="select select-bordered bg-gray-800 text-white focus:ring-2 focus:ring-pink-500"
                   value={gender}
@@ -183,9 +174,7 @@ const EditProfile = () => {
 
               {/* Skills */}
               <label className="form-control col-span-full">
-                <span className="label-text font-semibold text-gray-200">
-                  Skills
-                </span>
+                <span className="label-text font-semibold text-gray-200">Skills</span>
                 <div className="flex gap-2">
                   <input
                     className="input input-bordered bg-gray-800 text-white flex-1 focus:ring-2 focus:ring-pink-500"
@@ -223,9 +212,7 @@ const EditProfile = () => {
 
               {/* About */}
               <label className="form-control col-span-full">
-                <span className="label-text font-semibold text-gray-200">
-                  About
-                </span>
+                <span className="label-text font-semibold text-gray-200">About</span>
                 <textarea
                   className="textarea textarea-bordered bg-gray-800 text-white h-28 focus:ring-2 focus:ring-pink-500"
                   maxLength={200}
@@ -233,9 +220,7 @@ const EditProfile = () => {
                   onChange={(e) => setAbout(e.target.value)}
                   placeholder="Tell something about yourself..."
                 />
-                <span className="text-xs text-gray-400 mt-1">
-                  {about.length}/200
-                </span>
+                <span className="text-xs text-gray-400 mt-1">{about.length}/200</span>
               </label>
             </div>
           )}
@@ -261,8 +246,7 @@ const EditProfile = () => {
           <motion.button
             whileTap={{ scale: 0.95 }}
             whileHover={{ scale: 1.03 }}
-            className="btn btn-primary w-full mt-10 font-semibold text-lg 
-                       bg-gradient-to-r from-purple-500 via-pink-500 to-red-500 border-none shadow-lg"
+            className="btn btn-primary w-full mt-10 font-semibold text-lg bg-gradient-to-r from-purple-500 via-pink-500 to-red-500 border-none shadow-lg"
             onClick={saveProfile}
           >
             <Save size={18} /> Save Profile
@@ -274,22 +258,11 @@ const EditProfile = () => {
           initial={{ opacity: 0, x: 40 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.5 }}
-          className="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 
-                     w-full lg:w-1/2 rounded-3xl shadow-2xl border border-gray-700/50 
-                     p-6 flex items-center justify-center"
+          className="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 w-full lg:w-1/2 rounded-3xl shadow-2xl border border-gray-700/50 p-6 flex items-center justify-center"
         >
           <div className="w-full max-w-sm">
             <UserCard
-              user={{
-                firstName,
-                lastName,
-                photoUrl,
-                age,
-                gender,
-                about,
-                skills,
-                githubUrl,
-              }}
+              user={{ firstName, lastName, photoUrl, age, gender, about, skills, githubUrl }}
               preview
             />
           </div>
