@@ -8,6 +8,7 @@ import React from "react";
 const Premium = () => {
   const [isUserPremium, setIsUserPremium] = useState(false);
   const [loadingPlan, setLoadingPlan] = useState(null);
+  const [error, setError] = useState("");
 
   useEffect(() => {
     verifyPremiumUser();
@@ -21,12 +22,15 @@ const Premium = () => {
       if (res.data.isPremium) setIsUserPremium(true);
     } catch (err) {
       console.error("Error verifying premium user", err);
+      setError("Unable to verify premium status. Please refresh.");
     }
   };
 
   const handleBuyClick = async (type) => {
     try {
+      setError("");
       setLoadingPlan(type);
+
       const order = await axios.post(
         BASE_URL + "/payment/create",
         { membershipType: type },
@@ -49,7 +53,6 @@ const Premium = () => {
         },
         theme: { color: "#2563EB" },
         handler: async function (response) {
-          console.log("Payment success:", response);
           try {
             await axios.post(
               BASE_URL + "/payment/confirm",
@@ -62,6 +65,9 @@ const Premium = () => {
             verifyPremiumUser(); // refresh UI instantly
           } catch (err) {
             console.error("Error confirming payment", err);
+            setError("Payment succeeded but confirmation failed. Contact support.");
+          } finally {
+            setLoadingPlan(null);
           }
         },
         modal: {
@@ -73,10 +79,12 @@ const Premium = () => {
       rzp.open();
     } catch (err) {
       console.error("Error creating payment", err);
+      setError("Failed to create payment. Try again.");
       setLoadingPlan(null);
     }
   };
 
+  // ✅ Premium state UI
   if (isUserPremium) {
     return (
       <motion.div
@@ -85,9 +93,9 @@ const Premium = () => {
         transition={{ duration: 0.7 }}
         className="flex justify-center items-center h-[80vh] text-center px-4"
       >
-        <div className="bg-green-100 border border-green-300 rounded-2xl shadow-lg p-10 max-w-lg">
+        <div className="bg-gradient-to-br from-green-100 via-green-50 to-white border border-green-300 rounded-2xl shadow-xl p-10 max-w-lg">
           <h1 className="text-3xl font-bold text-green-700">
-            🎉 You're already a Premium Member!
+            🎉 You're a Premium Member!
           </h1>
           <p className="mt-4 text-gray-600">
             Enjoy unlimited connections and exclusive perks 🚀
@@ -97,6 +105,7 @@ const Premium = () => {
     );
   }
 
+  // ✅ Plans UI
   return (
     <div className="py-16 px-6 bg-gradient-to-b from-gray-50 to-gray-100 min-h-screen relative overflow-hidden">
       <motion.div
@@ -113,17 +122,26 @@ const Premium = () => {
         Choose Your <span className="text-blue-600">Premium Plan</span>
       </motion.h1>
 
+      {error && (
+        <p className="text-center text-red-500 mb-6 relative z-10">{error}</p>
+      )}
+
       <div className="max-w-6xl mx-auto grid gap-8 md:grid-cols-2 relative z-10">
         {/* Silver Plan */}
         <motion.div
           initial={{ opacity: 0, y: 80 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.2 }}
-          whileHover={{ scale: 1.04, boxShadow: "0px 15px 30px rgba(59, 130, 246, 0.3)" }}
-          className="bg-white shadow-lg rounded-3xl p-8 flex flex-col justify-between border border-gray-200 transition-all duration-300"
+          whileHover={{
+            scale: 1.04,
+            boxShadow: "0px 15px 30px rgba(59, 130, 246, 0.3)",
+          }}
+          className="bg-white shadow-lg rounded-3xl p-8 flex flex-col justify-between border border-gray-200 transition-all duration-300 min-h-[380px]"
         >
           <div>
-            <h2 className="text-3xl font-semibold text-gray-800">Silver Membership</h2>
+            <h2 className="text-3xl font-semibold text-gray-800">
+              Silver Membership
+            </h2>
             <p className="text-gray-500 mt-2">Best for starters</p>
             <ul className="mt-6 space-y-3 text-gray-700 list-disc list-inside">
               <li>Chat with developers</li>
@@ -157,11 +175,16 @@ const Premium = () => {
           initial={{ opacity: 0, y: 80 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.4 }}
-          whileHover={{ scale: 1.04, boxShadow: "0px 15px 30px rgba(245, 158, 11, 0.3)" }}
-          className="relative bg-gradient-to-br from-yellow-100 to-yellow-200 shadow-2xl rounded-3xl p-8 flex flex-col justify-between border-2 border-yellow-400 transition-all duration-300"
+          whileHover={{
+            scale: 1.04,
+            boxShadow: "0px 15px 30px rgba(245, 158, 11, 0.3)",
+          }}
+          className="relative bg-gradient-to-br from-yellow-100 to-yellow-200 shadow-2xl rounded-3xl p-8 flex flex-col justify-between border-2 border-yellow-400 transition-all duration-300 min-h-[380px]"
         >
           <div>
-            <h2 className="text-3xl font-bold text-gray-900">Gold Membership ⭐</h2>
+            <h2 className="text-3xl font-bold text-gray-900">
+              Gold Membership ⭐
+            </h2>
             <p className="text-gray-600 mt-2">Most Popular</p>
             <ul className="mt-6 space-y-3 text-gray-800 list-disc list-inside">
               <li>Chat with developers</li>
