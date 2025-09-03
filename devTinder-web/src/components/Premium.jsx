@@ -7,7 +7,7 @@ import React from "react";
 
 const Premium = () => {
   const [isUserPremium, setIsUserPremium] = useState(false);
-  const [loadingPlan, setLoadingPlan] = useState(null); // null | "silver" | "gold"
+  const [loadingPlan, setLoadingPlan] = useState(null);
 
   useEffect(() => {
     verifyPremiumUser();
@@ -15,7 +15,9 @@ const Premium = () => {
 
   const verifyPremiumUser = async () => {
     try {
-      const res = await axios.get(BASE_URL + "/premium/verify", { withCredentials: true });
+      const res = await axios.get(BASE_URL + "/premium/verify", {
+        withCredentials: true,
+      });
       if (res.data.isPremium) setIsUserPremium(true);
     } catch (err) {
       console.error("Error verifying premium user", err);
@@ -46,9 +48,21 @@ const Premium = () => {
           contact: "9999999999",
         },
         theme: { color: "#2563EB" },
-        handler: function (response) {
+        handler: async function (response) {
           console.log("Payment success:", response);
-          setTimeout(() => verifyPremiumUser(), 3000);
+          try {
+            await axios.post(
+              BASE_URL + "/payment/confirm",
+              {
+                razorpay_order_id: response.razorpay_order_id,
+                razorpay_payment_id: response.razorpay_payment_id,
+              },
+              { withCredentials: true }
+            );
+            verifyPremiumUser(); // refresh UI instantly
+          } catch (err) {
+            console.error("Error confirming payment", err);
+          }
         },
         modal: {
           ondismiss: () => setLoadingPlan(null),
@@ -85,7 +99,6 @@ const Premium = () => {
 
   return (
     <div className="py-16 px-6 bg-gradient-to-b from-gray-50 to-gray-100 min-h-screen relative overflow-hidden">
-      {/* Subtle background shimmer */}
       <motion.div
         className="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-blue-50 via-purple-50 to-pink-50 opacity-30 animate-pulse"
         style={{ zIndex: 0 }}
@@ -107,15 +120,8 @@ const Premium = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.2 }}
           whileHover={{ scale: 1.04, boxShadow: "0px 15px 30px rgba(59, 130, 246, 0.3)" }}
-          className={`bg-white shadow-lg rounded-3xl p-8 flex flex-col justify-between border border-gray-200 transition-all duration-300`}
+          className="bg-white shadow-lg rounded-3xl p-8 flex flex-col justify-between border border-gray-200 transition-all duration-300"
         >
-          <motion.div
-            className="absolute top-4 right-4 bg-blue-100 text-blue-700 px-3 py-1 rounded-full font-semibold text-sm shadow"
-            initial={{ scale: 0 }}
-            animate={{ scale: 1 }}
-          >
-            Starter
-          </motion.div>
           <div>
             <h2 className="text-3xl font-semibold text-gray-800">Silver Membership</h2>
             <p className="text-gray-500 mt-2">Best for starters</p>
@@ -154,15 +160,6 @@ const Premium = () => {
           whileHover={{ scale: 1.04, boxShadow: "0px 15px 30px rgba(245, 158, 11, 0.3)" }}
           className="relative bg-gradient-to-br from-yellow-100 to-yellow-200 shadow-2xl rounded-3xl p-8 flex flex-col justify-between border-2 border-yellow-400 transition-all duration-300"
         >
-          <motion.div
-            initial={{ scale: 0 }}
-            animate={{ scale: 1, rotate: [0, 10, -10, 0] }}
-            transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
-            className="absolute -top-4 -right-4 bg-yellow-400 text-white font-bold px-3 py-1 rounded-full shadow-lg text-sm flex items-center gap-1"
-          >
-            ⭐ PREMIUM
-          </motion.div>
-
           <div>
             <h2 className="text-3xl font-bold text-gray-900">Gold Membership ⭐</h2>
             <p className="text-gray-600 mt-2">Most Popular</p>
